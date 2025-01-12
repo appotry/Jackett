@@ -5,38 +5,16 @@ description: "Torlock is a torrent search site that lists verified torrents only
 language: en-US
 type: public
 encoding: UTF-8
-followredirect: true
+requestDelay: 2
 links:
   - https://www.torlock.com/
-  - https://www.torlock2.com/
-  - https://www.torlock.icu/
-  - https://torlock.unblockit.tv/
-  - https://torlock.nocensor.biz/
 legacylinks:
   - https://torlock.com/
-  - https://torlock.unblockit.pro/
-  - https://torlock.unblockit.one/
-  - https://torlock.unblockit.me/
-  - https://torlock.unblockit.pw/
-  - https://torlock.unblockit.id/
-  - https://torlock.unblockit.win/
-  - https://torlock.unblockit.top/
-  - https://torlock.unblockit.lat/
-  - https://torlock.unblockit.app/
-  - https://torlock.unblockit.dev/
-  - https://torlock.unblockit.ltd/
-  - https://torlock.unblockit.link/
-  - https://torlock.unblockit.buzz/
-  - https://torlock.unblockit.club/
-  - https://torlock.unblockit.onl/
-  - https://torlock.unblockit.li/
-  - https://torlock.unblockit.uno/
-  - https://torlock.unblockit.ch/
-  - https://torlock.nocensor.space/
-  - https://torlock.unblockit.ws/
-  - https://torlock.nocensor.work/
-  - https://torlock.unblockit.kim/
-  - https://torlock.unblockit.bz/
+  - https://www.torlock.icu/
+  - https://torlock.nocensor.cloud/
+  - https://torlock.mrunblock.bond/
+  - https://torlock.unblockit.download/
+  - https://www.torlock2.com/ # 400 Bad Request No required SSL certificate was sent
 
 caps:
   # dont forget to update the search fields category case block
@@ -79,7 +57,7 @@ settings:
 
 search:
   paths:
-    - path: "{{ if .Keywords }}/all/torrents/{{ .Keywords }}.html?sort={{ .Config.sort }}&order={{ .Config.type }}{{ else }}/fresh.html{{ end }}"
+    - path: "/all/torrents/{{ if .Keywords }}{{ .Keywords }}{{ else }}{{ .Today.Year }}{{ end }}.html?sort={{ .Config.sort }}&order={{ .Config.type }}"
       categories: ["!", TELEVISION, MOVIES, MUSIC, GAMES, SOFTWARE, ANIME, EBOOKS, OTHER, ADULT, AUDIOBOOK, IMAGES]
     - path: "{{ if .Keywords }}/television/torrents/{{ .Keywords }}.html?sort={{ .Config.sort }}&order={{ .Config.type }}{{else}}/television/1/{{ .Config.sort }}/{{ .Config.type }}.html{{end}}"
       categories: [TELEVISION]
@@ -153,7 +131,7 @@ search:
         - name: append
           args: " -07:00" # PDT
         - name: dateparse
-          args: "1/2/2006 -07:00"
+          args: "M/d/yyyy zzz"
     date_day:
       selector: td:nth-child(2):contains("Today"), td:nth-child(2):contains("Yesterday")
       optional: true

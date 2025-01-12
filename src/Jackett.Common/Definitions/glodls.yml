@@ -5,48 +5,19 @@ description: "GloDLS is a Public Torrent Tracker for MOVIES / TV / GENERAL"
 language: en-US
 type: public
 encoding: UTF-8
-followredirect: true
 links:
   - https://glodls.to/
-  - https://www.gtdb.to/
-  - https://glotorrents.unblockit.tv/
-  - https://glotorrents.nocensor.biz/
+  - https://gtso.cc/
+  - https://glodls.unblockninja.com/
 legacylinks:
   - https://glodls.rocks/
-  - https://glotorrents.unblockit.pro/
-  - https://glotorrents.unblockit.one/
-  - https://glodls.black-mirror.xyz/
-  - https://glodls.unblocked.casa/
-  - https://glodls.proxyportal.fun/
-  - https://glodls.uk-unblock.xyz/
-  - https://glodls.ind-unblock.xyz/
-  - https://glotorrents.unblockit.me/
-  - https://glotorrents.unblockit.pw/
-  - https://glotorrents.unblockit.id/
-  - https://glotorrents.unblockit.win/
-  - https://glodls.unblocked.bar/
-  - https://glodls.proxyportal.pw/
-  - https://glodls.uk-unblock.pro/
   - https://gtdb.to/
-  - https://glotorrents.unblockit.top/
-  - https://glotorrents.unblockit.lat/
-  - https://glotorrents.unblockit.app/
-  - https://glodls.unblocked.rest/
-  - https://glotorrents.unblockit.dev/
-  - https://glotorrents.unblockit.ltd/
-  - https://glotorrents.unblockit.link/
-  - https://glotorrents.unblockit.buzz/
-  - https://glodls.unblocked.monster/
-  - https://glotorrents.unblockit.club/
-  - https://glotorrents.unblockit.onl/
-  - https://glotorrents.unblockit.li/
-  - https://glotorrents.unblockit.uno/
-  - https://glotorrents.unblockit.ch/
-  - https://glotorrents.nocensor.space/
-  - https://glotorrents.unblockit.ws/
-  - https://glotorrents.nocensor.work/
-  - https://glotorrents.unblockit.kim/
-  - https://glotorrents.unblockit.bz/
+  - https://gtdb.cc/
+  - https://www.gtdb.to/
+  - https://glotorrents.mrunblock.bond/
+  - https://glotorrents.nocensor.cloud/
+  - https://glodls.ninjaproxy1.com/ # blank
+  - https://glotorrents.unblockit.download/
 
 caps:
   categorymappings:
@@ -100,6 +71,7 @@ search:
   paths:
     # https://glodls.to/search_results.php?c1=1&c72=1&c41=1&search=blacklist+s07e05&cat=0&incldead=1&inclexternal=0&lang=0&sort=id&order=desc
     - path: search_results.php
+  allowEmptyInputs: true
   inputs:
     $raw: "{{ range .Categories }}c{{.}}=1&{{end}}"
     search: "{{ .Keywords }}"
@@ -118,15 +90,15 @@ search:
     after: 1
 
   fields:
-    category:
-      text: 33 # issue #7113
-    category|noappend:
-      optional: true
+    category_optional:
       selector: a[href^="/search.php?cat="]
       attribute: href
+      optional: true
       filters:
         - name: querystring
           args: cat
+    category:
+      text: "{{ if .Result.category_optional }}{{ .Result.category_optional }}{{ else }}33{{ end }}"
     title:
       selector: td:nth-child(2) a[title]
       attribute: title
