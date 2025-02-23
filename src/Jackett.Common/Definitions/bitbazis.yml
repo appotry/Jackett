@@ -4,46 +4,35 @@ name: Bit-Bázis
 description: "Bit-Bázis is a HUNGARIAN Private Tracker for MOVIES / TV"
 language: hu-HU
 type: private
-# encoding: ISO-8859-2
 encoding: UTF-8
+requestDelay: 2
 links:
   - https://bitbazis.net/
 
 caps:
+  # dont forget to update the path categories in the search block
   categorymappings:
-    - {id: 15, cat: Movies/SD, desc: "Film/XviD/Hun"}
-    - {id: 34, cat: Movies/HD, desc: "Film/x264/Hun"}
-    - {id: 83, cat: Movies/HD, desc: "Film/HD/Hun"}
-    - {id: 64, cat: Movies, desc: "Film/Pack"}
-    - {id: 16, cat: Movies/SD, desc: "Film/XviD/Eng"}
-    - {id: 17, cat: Movies/DVD, desc: "Film/DVD-R/Hun"}
-    - {id: 19, cat: Movies/DVD, desc: "Film/DVD-R/Eng"}
-    - {id: 48, cat: Movies/HD, desc: "Film/x264/Eng"}
-    - {id: 82, cat: Movies/HD, desc: "Film/HD/Eng"}
-    - {id: 85, cat: Movies/SD, desc: "Film/Cam/XviD/Hun"}
-    - {id: 86, cat: Movies/SD, desc: "Film/Cam/XviD/Eng"}
-    - {id: 22, cat: TV, desc: "Sorozat/Hun"}
-    - {id: 69, cat: TV/Anime, desc: "Mese/XviD"}
-    - {id: 58, cat: TV, desc: "Sorozat/Eng"}
-    - {id: 68, cat: TV/Anime, desc: "Mese/DVD"}
-    - {id: 25, cat: Audio/MP3, desc: "Mp3/Hun"}
-    - {id: 26, cat: Audio/MP3, desc: "Mp3/Eng"}
-    - {id: 71, cat: Audio/Lossless, desc: "Lossless/Eng"}
-    - {id: 84, cat: Audio/Lossless, desc: "Lossless/Hun"}
-    - {id: 31, cat: PC/Games, desc: "Játék/PC"}
-    - {id: 81, cat: PC/0day, desc: "Program/PC"}
-    - {id: 14, cat: PC, desc: "Program/Egyéb"}
-    - {id: 49, cat: PC/0day, desc: "Program/Rip"}
-    - {id: 54, cat: Console, desc: "Játék/Konzol"}
-    - {id: 67, cat: PC/Mobile-Android, desc: "Program/Android"}
-    - {id: 33, cat: XXX/SD, desc: "Film/SD/XXX"}
-    - {id: 89, cat: XXX/x264, desc: "Film/HD/XXX"}
-    - {id: 66, cat: XXX/ImageSet, desc: "Képek/XXX"}
-    - {id: 27, cat: Books/EBook, desc: "Könyv/Hun"}
-    - {id: 50, cat: Books/EBook, desc: "Könyv/Eng"}
-    - {id: 70, cat: Audio/Audiobook, desc: "Hangoskönyv"}
-    - {id: 24, cat: Audio/Video, desc: "Videóklipp"}
-    - {id: 65, cat: Other, desc: "Egyéb"}
+    - {id: 15, cat: Movies/SD, desc: "Film-SD", default: true}
+    - {id: 83, cat: Movies/HD, desc: "Film-HD", default: true}
+    - {id: 94, cat: Movies/HD, desc: "Film-FHD", default: true}
+    - {id: 85, cat: Movies/SD, desc: "Film-Cam", default: true}
+    - {id: 22, cat: TV, desc: "Sorozat-Hun", default: true}
+    - {id: 25, cat: Audio/MP3, desc: "Mp3-Hun", default: true}
+    - {id: 26, cat: Audio/MP3, desc: "Mp3-Eng", default: true}
+    - {id: 84, cat: Audio/Lossless, desc: "FLAC-Hun", default: true}
+    - {id: 71, cat: Audio/Lossless, desc: "FLAC-Eng", default: true}
+    - {id: 27, cat: Books/EBook, desc: "Könyv", default: true}
+    - {id: 81, cat: PC/0day, desc: "Program", default: true}
+    - {id: 31, cat: PC/Games, desc: "Játék", default: true}
+    - {id: 69, cat: TV/Anime, desc: "Mese-SD", default: true}
+    - {id: 91, cat: TV/Anime, desc: "Mese-HD", default: true}
+    - {id: 64, cat: Movies, desc: "Film-Pack", default: true}
+    - {id: 92, cat: Movies/UHD, desc: "Film-UHD", default: true}
+    - {id: 66, cat: XXX/ImageSet, desc: "XXX", default: false}
+    - {id: 33, cat: XXX/SD, desc: "XXX-SD", default: false}
+    - {id: 89, cat: XXX/x264, desc: "XXX-HD", default: false}
+    - {id: 24, cat: Audio/Video, desc: "Klip", default: true}
+    - {id: 14, cat: Other, desc: "Egyéb", default: true}
 
   modes:
     search: [q]
@@ -53,12 +42,15 @@ caps:
     music-search: [q]
 
 settings:
-  - name: username
+  - name: cookie
     type: text
-    label: Username
-  - name: password
-    type: password
-    label: Password
+    label: Cookie
+  - name: info_cookie
+    type: info_cookie
+  - name: freeleech
+    type: checkbox
+    label: Filter freeleech only
+    default: false
   - name: sort
     type: select
     label: Sort requested from site
@@ -67,7 +59,6 @@ settings:
       1: title
       4: added
       5: size
-      7: seeders
   - name: type
     type: select
     label: Order requested from site
@@ -78,88 +69,116 @@ settings:
   - name: info_tpp
     type: info
     label: Results Per Page
-    default: For best results, change the <b>Torrentek száma egy oldalon:</b> setting to <b>100</b> on your account profile.
+    default: For best results, change the <b>Torrentek száma egy oldalon:</b> setting to <b>50</b> on your account profile.
+  - name: info_activity
+    type: info
+    label: Account Inactivity
+    default: "If the user does not access the site for 1 month, he will receive an e-mail notification. If you stay away for 9 months, your account will be suspended and deleted. After the 9-month absence, the user cannot register again."
 
 login:
-  path: login.php
-  method: post
+  method: cookie
   inputs:
-    username: "{{ .Config.username }}"
-    password: "{{ .Config.password }}"
-  error:
-    - selector: table[width="920"]:contains("Hiba")
+    cookie: "{{ .Config.cookie }}"
   test:
     path: index.php
-    selector: a[href^="logout.php?k="]
+    selector: i.fa-arrow-right-from-bracket[title="Kilépés"]
 
 search:
   paths:
     - path: browse.php
+      categories: [15, 83, 94, 85, 22, 25, 26, 84, 71, 27, 81, 31, 69, 91, 64, 92, 24, 14]
+      inputs:
+        # 0 all, 1 active, 2 deadonly, 3  myuploads, 4 zeroseed, 6 re-seeded
+        incldead: 0
+    - path: browse.php
+      categories: [33, 66, 89]
+      inputs:
+        xxx: 1
+        # 0 active, 1 all, 2 deadonly, 3  myuploads, 4 zeroseed, 6 re-seeded
+        incldead: 1
   inputs:
     $raw: "{{ range .Categories }}c{{.}}=1&{{end}}"
     search: "{{ .Keywords }}"
-    # 0 active, 1 all, 2 deadonly, 3  myuploads, 4 zeroseed
-    incldead: 1
     sort: "{{ .Config.sort }}"
     type: "{{ .Config.type }}"
-    # site does not support imdbid searching or appear to have freeleech
+    # site does not support imdbid searching
+    # can support genre searching but you need to know the id, eg &genre23=1 for Comedy (id is 23)
 
   rows:
-    selector: table[width="900px"]:last-child tbody tr:has(a[href^="userdetails.php?id="])
+    selector: "tr[class^=\"toriadatok\"]:has(i.status-yes){{ if .Config.freeleech }}:has(i:contains(\"(Free)\")){{ else }}{{ end }}"
 
   fields:
-    category:
-      selector: a[href^="browse.php?cat="]
-      attribute: href
+    categorydesc:
+      selector: td[class^="catpic_"]
+      attribute: class
       filters:
-        - name: querystring
-          args: cat
+        - name: replace
+          args: ["catpic_", ""]
     title:
-      selector: a[href^="details.php?id="]
+      selector: span.torrent-title
+    _id:
+      selector: tr[data-torrent-id]
+      attribute: data-torrent-id
     details:
-      selector: a[href^="details.php?id="]
-      attribute: href
+      text: "details.php?id={{ .Result._id }}#adatlap"
+    download:
+      text: "download.php?torrent={{ .Result._id }}"
     poster:
       selector: a.preview
       attribute: href
-    download:
-      selector: a[href^="details.php?id="]
+    imdbid:
+      selector: a[href*="imdb.com/title/tt"]
       attribute: href
+    size:
+      selector: span.torrent-size
+    date:
+      # 36 perce
+      # 13 órája  és 59 perce
+      # 2 napja  és 10 órája
+      # 1 hete  és 1 napja
+      # 1 éve  és 30 hete
+      selector: span.uploader
       filters:
         - name: replace
-          args: ["details.php?id=", "download.php?torrent="]
-    size:
-      selector: td:last-child
-    date:
-      # 2021-11-09 16:51:24
-      selector: td:nth-last-child(2)
-      filters:
-        - name: append
-          args: " +01:00" # CET
-        - name: dateparse
-          args: "2006-01-02 15:04:05 -07:00"
-    files:
-      selector: td:nth-last-child(4)
-    grabs:
-      selector: td:nth-child(2)
-      filters:
-        - name: regexp
-          args: "D:(\\d+)x"
+          args: ["és ", " "]
+        - name: replace
+          args: ["perce", "minute"]
+        - name: replace
+          args: ["órája", "hour"]
+        - name: replace
+          args: ["napja", "day"]
+        - name: replace
+          args: ["hete", "week"]
+        - name: replace
+          args: ["éve", "year"]
+        - name: timeago
     seeders:
-      selector: td:nth-child(2)
-      filters:
-        - name: regexp
-          args: "S:(\\d+)"
+      selector: td:nth-child(5)
+      optional: true
+      default: 0
     leechers:
-      selector: td:nth-child(2)
-      filters:
-        - name: regexp
-          args: "L:(\\d+)"
+      selector: td:nth-child(6)
+      optional: true
+      default: 0
+    grabs:
+      selector: td:nth-child(7)
+      optional: true
+      default: 0
+    genre:
+      selector: span.torrent-genre
+    description:
+      text: "{{ .Result.genre }}"
     downloadvolumefactor:
-      text: 1
+      case:
+        "i:contains(\"(Free)\")": 0
+        "*": 1
     uploadvolumefactor:
-      text: 1
+      case:
+        "i:contains(\"(2x)\")": 2
+        "i:contains(\"(3x)\")": 3
+        "i:contains(\"(4x)\")": 4
+        "*": 1
     minimumseedtime:
-      # 3 day (as seconds = 3 x 24 x 60 x 60)
-      text: 259200
+      # 1 day (as seconds = 1 x 24 x 60 x 60)
+      text: 86400
 # engine n/a

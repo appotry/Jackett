@@ -1,55 +1,26 @@
 ---
 id: torrentgalaxy
+replaces:
+  - torrentgalaxyorg
 name: TorrentGalaxy
 description: "TorrentGalaxy (TGx) is a Public site for TV / MOVIES / GENERAL"
 language: en-US
 type: public
 encoding: UTF-8
-followredirect: true
+requestDelay: 2
+# https://proxygalaxy.me/ for health status and alternate domains
 links:
   - https://torrentgalaxy.to/
   - https://torrentgalaxy.mx/
-  - https://torrentgalaxy.su/
-  - https://torrentgalaxy.unblockninja.com/
-  - https://torrentgalaxy.unblockit.tv/
-  - https://torrentgalaxy.nocensor.biz/
 legacylinks:
   - https://torrentgalaxy.org/ # redirects to *.to
-  - https://torrentgalaxy.unblockit.pro/
-  - https://torrentgalaxy.unblockit.one/
-  - https://tgx.black-mirror.xyz/
-  - https://tgx.unblocked.casa/
-  - https://tgx.proxyportal.fun/
-  - https://tgx.uk-unblock.xyz/
-  - https://tgx.ind-unblock.xyz/
-  - https://torrentgalaxy.unblockit.me/
-  - https://torrentgalaxy.unblockit.pw/
-  - https://torrentgalaxy.unblockit.id/
-  - https://torrentgalaxy.unblockit.win/
   - https://torrentgalaxy.pw/ # proxy list only
-  - https://tgx.unblocked.bar/
-  - https://tgx.proxyportal.pw/
-  - https://tgx.uk-unblock.pro/
-  - https://torrentgalaxy.unblockit.top/
-  - https://torrentgalaxy.unblockit.lat/
-  - https://torrentgalaxy.unblockit.app/
-  - https://torrentgalaxy.root.yt/
-  - https://tgx.unblocked.rest/
-  - https://torrentgalaxy.unblockit.dev/
-  - https://torrentgalaxy.unblockit.ltd/
-  - https://torrentgalaxy.unblockit.link/
-  - https://torrentgalaxy.unblockit.buzz/
   - https://tgx.unblocked.monster/
-  - https://torrentgalaxy.unblockit.club/
-  - https://torrentgalaxy.unblockit.onl/
-  - https://torrentgalaxy.unblockit.li/
-  - https://torrentgalaxy.unblockit.uno/
-  - https://torrentgalaxy.unblockit.ch/
-  - https://torrentgalaxy.nocensor.space/
-  - https://torrentgalaxy.unblockit.ws/
-  - https://torrentgalaxy.nocensor.work/
-  - https://torrentgalaxy.unblockit.kim/
-  - https://torrentgalaxy.unblockit.bz/
+  - https://torrentgalaxy.su/
+  - https://torrentgalaxy.unblockninja.com/ # breaks on checkpoint
+  - https://tgx.proxyninja.org/ # breaks on checkpoint
+  - https://tgx.sb/
+  - https://tgx.rs/ # ERR_CONNECTION_REFUSED
 
 caps:
   categorymappings:
@@ -88,11 +59,12 @@ caps:
     - {id: 35, cat: XXX/x264, desc: "XXX - HD"}
     - {id: 47, cat: XXX/Other, desc: "XXX - Misc"}
     - {id: 34, cat: XXX/SD, desc: "XXX - SD"}
+    - {id: 48, cat: XXX/UHD, desc: "XXX - 4K UHD"}
 
   modes:
     search: [q]
-    tv-search: [q, season, ep]
-    movie-search: [q]
+    tv-search: [q, season, ep, imdbid]
+    movie-search: [q, imdbid]
     music-search: [q]
     book-search: [q]
 
@@ -114,28 +86,53 @@ settings:
       desc: desc
       asc: asc
 
-login:
-  # https://torrentgalaxy.to/galaxyfence.php?f&dropoff=%2Ftorrents.php%3Fsearch%3DHarry%2BPotter
-  path: galaxyfence.php?f
-  method: form
-  form: form[action="/galaxyfence.php"]
-  inputs:
-    dropoff: /torrents.php
-  captcha:
-    type: image
-    selector: img#captcha
-    input: captcha
-  error:
-    - selector: span:contains("Captcha incorrect")
-  test:
-    path: /
-
 search:
-  # https://torrentgalaxy.org/torrents.php?c41=1&search=mercedes+s02e04&lang=0&sort=id&order=desc
-  path: torrents.php
+  # https://torrentgalaxy.org/torrents.php?parent_cat=TV&search=mercedes+s02e04&lang=0&sort=id&order=desc
+  paths:
+    - path: torrents.php
+      categories: ["!", 28, 20, 21, 18, 13, 19, 12, 14, 15, 9, 43, 10, 3, 46, 45, 42, 4, 1, 22, 26, 23, 25, 24, 17, 40, 37, 33, 41, 5, 11, 6, 7, 35, 47, 34, 48]
+    - path: torrents.php
+      categories: [28]
+      inputs:
+        parent_cat: Anime
+    - path: torrents.php
+      categories: [20, 21, 18]
+      inputs:
+        parent_cat: Apps
+    - path: torrents.php
+      categories: [13, 19, 12, 14, 15]
+      inputs:
+        parent_cat: Books
+    - path: torrents.php
+      categories: [9]
+      inputs:
+        parent_cat: Docus
+    - path: torrents.php
+      categories: [43, 10]
+      inputs:
+        parent_cat: Games
+    - path: torrents.php
+      categories: [3, 46, 45, 42, 4, 1]
+      inputs:
+        parent_cat: Movies
+    - path: torrents.php
+      categories: [22, 26, 23, 25, 24]
+      inputs:
+        parent_cat: Music
+    - path: torrents.php
+      categories: [17, 40, 37, 33]
+      inputs:
+        parent_cat: Other
+    - path: torrents.php
+      categories: [41, 5, 11, 6, 7]
+      inputs:
+        parent_cat: TV
+    - path: torrents.php
+      categories: [35, 47, 34, 48]
+      inputs:
+        parent_cat: XXX
   inputs:
-    $raw: "{{ range .Categories }}c{{.}}=1&{{end}}"
-    search: "{{ .Keywords }}"
+    search: "{{ if .Query.IMDBID }}{{ .Query.IMDBID }}{{ else }}{{ .Keywords }}{{ end }}"
     lang: 0
     sort: "{{ .Config.sort }}"
     order: "{{ .Config.type }}"
@@ -173,6 +170,15 @@ search:
     magnet:
       selector: div a[href^="magnet:?"]
       attribute: href
+    poster:
+      selector: div[onmouseover]
+      attribute: onmouseover
+      filters:
+        - name: regexp
+          args: src=\\'(.+?)\\'
+    imdbid:
+      selector: a[href^="/torrents.php?search=tt"]
+      attribute: href
     size:
       selector: div span[style^="border-radius"]
     seeders:
@@ -193,9 +199,12 @@ search:
         - name: append
           args: " -07:00" # PDT
         - name: dateparse
-          args: "02/01/06 15:04 -07:00"
+          args: "dd/MM/yy HH:mm zzz"
     date:
       text: "{{ if or .Result.date_year .Result.date_ago }}{{ or .Result.date_year .Result.date_ago }}{{ else }}now{{ end }}"
+    description:
+      selector: i.fa-exclamation-triangle, i.fa-check
+      attribute: title
     downloadvolumefactor:
       text: 0
     uploadvolumefactor:
